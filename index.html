@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lionel Messi </title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Reset dan style dasar */
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Arial',sans-serif;
+    /* WARNA LANGIT MALAM: Gradasi Biru Tengah Malam yang dalam */
+    background: linear-gradient(to bottom, #000428, #004e92); 
+    background-attachment: fixed;
+    color:#333333;
+    text-align:center;
+    scroll-behavior:smooth;
+    overflow-x: hidden;
+}
+
+/* ==================================================== */
+/* STYLE UNTUK EFEK BINTANG JATUH (SANGAT JELAS)        */
+/* ==================================================== */
+#star-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; 
+    pointer-events: none;
+}
+
+.star {
+    position: absolute;
+    background: #FFD700; /* Emas Terang */
+    border-radius: 50%;
+    opacity: 0;
+    /* Glow maksimal di atas warna langit malam */
+    box-shadow: 
+        0 0 12px #FFD700, 
+        0 0 20px rgba(255, 215, 0, 0.6),
+        0 0 4px #ffffff; 
+    animation: star-fall linear infinite;
+}
+
+@keyframes star-fall {
+    0% { transform: translateY(-10vh) translateX(0) scale(0.5); opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { transform: translateY(110vh) translateX(300px) scale(1.5); opacity: 0; }
+}
+
+/* ==================================================== */
+/* LAYOUT CONTAINER (WARNA ASLI TETAP DIPERTAHANKAN)    */
+/* ==================================================== */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    /* Menggunakan putih transparan agar kontras dengan langit malam tapi layout tetap sama */
+    background-color: rgba(255, 255, 255, 0.85); 
+    min-height: 100vh;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 1;
+}
+
+nav{position:sticky;top:0;background:#43A1D5;padding:12px;z-index:100;box-shadow:0 2px 5px rgba(0,0,0,0.3);}
+nav a{
+    font-family: 'Oswald', sans-serif;
+    color:#ffffff;
+    text-decoration:none;
+    margin:0 15px;
+    font-weight:bold;
+    transition: color 0.3s;
+    text-transform: uppercase;
+}
+nav a:hover, nav a.active{color:#FFD700;text-decoration:underline;}
+
+section{padding:40px 20px;}
+h1,h2,h3{color:#005CE6;margin-bottom:15px;}
+.hero-img{width:300px;border-radius:15px;margin-top:20px;border:3px solid #43A1D5; background: white;}
+
+.stats{background:rgba(255, 255, 255, 0.95);padding:20px;border-radius:12px;display:inline-block;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+.counter{font-weight:bold;color:#005CE6;}
+.clubs,.trophies,.trophies-club{background:rgba(255, 255, 255, 0.95);padding:20px;border-radius:12px;margin-top:15px;box-shadow:0 4px 10px rgba(0,0,0,0.1);text-align:left;}
+
+.clubs ul,.trophies ul,.trophies-club ul{list-style:none;padding-left:0;}
+.clubs li,.trophies li,.trophies-club li{padding:5px 0;opacity:0;transform:translateX(-20px);transition:opacity 0.5s ease-out, transform 0.5s ease-out;position:relative;cursor:pointer;}
+.clubs li.visible,.trophies li.visible,.trophies-club li.visible{opacity:1;transform:translateX(0);}
+.clubs li:hover,.trophies li:hover,.trophies-club li:hover{color:#43A1D5;text-shadow:0 0 5px rgba(67, 161, 213, 0.4);transform:scale(1.05);}
+
+li[data-tooltip]::after{
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #FFD700;
+  color: #121212;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  font-size: 12px;
+  z-index: 10;
+}
+li[data-tooltip]:hover::after{opacity:1;transform:translateX(-50%) translateY(-5px);}
+
+.gallery-filter{margin-top:20px;}
+.gallery-filter button{padding:8px 12px;margin:5px;background:#43A1D5;color:#ffffff;border:none;border-radius:5px;cursor:pointer;transition:0.3s;font-weight:bold;}
+.gallery-filter button:hover{background:#FFD700;color:#121212;}
+.gallery{display:flex;justify-content:center;flex-wrap:wrap;gap:15px;margin-top:20px;}
+.gallery-img{width:200px;border-radius:10px;transition: transform 0.3s;cursor:pointer;position:relative;border:2px solid #43A1D5; background: #eee;}
+.gallery-img img{width:100%;border-radius:10px;display:block;}
+.gallery-img:hover{transform:scale(1.1);}
+
+.gallery-img .tooltip-text{display:none;position:absolute;bottom:110%;left:50%;transform:translateX(-50%);background:#FFD700;color:#121212;padding:6px 10px;border-radius:6px;font-size:12px;white-space:nowrap;z-index:20;}
+.gallery-img.active .tooltip-text{display:block;}
+
+footer{margin-top:30px;padding:15px;background:#43A1D5;color:#ffffff;box-shadow:0 -2px 5px rgba(0,0,0,0.2);}
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity 1s ease-out, transform 1s ease-out;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
+#lightbox{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:none;justify-content:center;align-items:center;z-index:200;}
+#lightbox img{max-width:90%;max-height:90%;border-radius:10px;}
+img.club-logo{width:20px;vertical-align:middle;margin-right:5px;}
+@media(max-width:768px){.gallery-img{width:45%;}.hero-img{width:80%;}}
+</style>
+</head>
+<body>
+
+<div id="star-container"></div>
+
+<div class="container">
+    <nav>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#stats">Stats</a>
+    <a href="#clubs">Clubs</a>
+    <a href="#trophies">Individual Trophies</a>
+    <a href="#club-trophies">Club Trophies</a>
+    <a href="#gallery">Gallery</a>
+    </nav>
+
+    <section id="home" class="fade-in">
+    <h1>LIONEL MESSI</h1>
+    <p>The Greatest Of All Time 🐐</p>
+    <img src="messiwc.png" alt="Messi" class="hero-img">
+    </section>
+
+    <section id="about" class="fade-in">
+    <h2>About Messi</h2>
+    <p>Lionel Messi dikenal karena dribbling, visi permainan, dan kemampuan mencetak golnya. Ia telah memenangkan banyak gelar baik individu maupun tim.</p>
+    </section>
+
+    <section id="stats" class="fade-in">
+    <h2>Career Stats</h2>
+    <div class="stats">
+    <p>⚽ Goals: <span class="counter" data-target="904">0</span></p>
+    <p>🅿️ Assists: <span class="counter" data-target="407">0</span></p>
+    <p>🏆 Titles: <span class="counter" data-target="48">0</span></p>
+    </div>
+    </section>
+
+    <section id="clubs" class="fade-in">
+      <h2>Clubs Messi Played For</h2>
+      <div class="clubs">
+        <ul>
+          <li class="visible">🔹 <img class="club-logo" src="newells.png" alt="Newell's"> Newell's Old Boys (1995–2000)</li>
+          <li class="visible">🔹 <img class="club-logo" src="barcelona.png" alt="Barcelona"> FC Barcelona (2000–2021)</li>
+          <li class="visible">🔹 <img class="club-logo" src="psg.png" alt="PSG"> Paris Saint-Germain (2021–2023)</li>
+          <li class="visible">🔹 <img class="club-logo" src="miami.png" alt="Inter Miami"> Inter Miami CF (2023–Sekarang)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="trophies" class="fade-in">
+    <h2>Individual Trophies & Awards</h2>
+    <div class="trophies">
+    <ul>
+    <li data-tooltip="Ballon d'Or 2009,2010,2011,2012,2015,2019,2021,2023">🏆 Ballon d'Or: 8x</li>
+    <li data-tooltip="FIFA Best Men's Player 2019,2022,2023">🏆 FIFA Best Men's Player: 3x</li>
+    <li data-tooltip="Golden Shoe 2010,2012,2013,2017,2018,2019">🥇 Golden Shoe: 6x</li>
+    <li data-tooltip="La Liga Top Scorer 2010,2012,2013,2017,2018,2019,2020,2021">🥅 La Liga Top Scorer: 8x</li>
+    <li data-tooltip="FIFA World Cup Golden Ball 2014,2022">🌎 FIFA World Cup Golden Ball: 2014,2022</li>
+    <li data-tooltip="UEFA Champions League Top Scorer 2009,2010,2011,2012,2015,2019">🏆 UEFA Champions League Top Scorer: 6x</li>
+    <li data-tooltip="Copa America Best Player 2015,2021">🏅 Copa America Best Player: 2015,2021</li>
+    </ul>
+    </div>
+    </section>
+
+    <section id="club-trophies" class="fade-in">
+    <h2>Club Trophies</h2>
+    <div class="trophies-club">
+     <h3>🇦🇷 Argentina</h3>
+    <ul>
+    <li data-tooltip="Copa America 2x (2021-2024)">🏆 Copa America: 2x</li>
+    <li data-tooltip="Finalissima 1x (2022)">🏆 Finalissima: 1x</li>
+    <li data-tooltip="World Cup 1x (2022)">🏆 World Cup: 1x</li>
+    </ul>
+    <h3>🔵 FC Barcelona</h3>
+    <ul>
+    <li data-tooltip="La Liga 10x (2005-2019)">🏆 La Liga: 10x</li>
+    <li data-tooltip="Copa del Rey 7x (2009-2021)">🏆 Copa del Rey: 7x</li>
+    <li data-tooltip="UEFA Champions League 4x (2006,2009,2011,2015)">🏆 UEFA Champions League: 4x</li>
+    <li data-tooltip="FIFA Club World Cup 3x (2009,2011,2015)">🏆 FIFA Club World Cup: 3x</li>
+    <li data-tooltip="UEFA Super Cup 3x (2009,2011,2015)">🏆 UEFA Super Cup: 3x</li>
+    <li data-tooltip="Supercopa de España 7x (2005-2016)">🏆 Supercopa de España: 7x</li>
+    </ul>
+    <h3>🔴 Paris Saint-Germain</h3>
+    <ul>
+    <li data-tooltip="Ligue 1 2022, 2023">🏆 Ligue 1: 2x</li>
+    <li data-tooltip="Trophée des Champions 2022">🏆 Trophée des Champions: 1x</li>
+    </ul>
+    <h3>⚪ Inter Miami CF</h3>
+    <ul>
+    <li data-tooltip="Leagues Cup 2023">🏆 Leagues Cup: 2023</li>
+    <li data-tooltip="Supporters’ Shield 2024">🏆 Supporters’ Shield: 2024</li>
+    <li data-tooltip="MLS Cup 2025">🏆 MLS Cup: 2025</li>
+    </ul>
+    <h3>🔴 Newell's Old Boys</h3>
+    <ul>
+    <li data-tooltip="Youth Titles">🏆 Liga Argentina Youth Titles</li>
+    </ul>
+    </div>
+    </section>
+
+    <section id="gallery" class="fade-in">
+    <h2>Photo Gallery</h2>
+    <div class="gallery-filter">
+    <button data-club="all">All</button>
+    <button data-club="barcelona">Barcelona</button>
+    <button data-club="psg">PSG</button>
+    <button data-club="miami">Inter Miami</button>
+    <button data-club="newells">Newell's</button>
+    </div>
+    <div class="gallery">
+    <div class="gallery-img mobile-tooltip" data-club="miami">
+      <img src="messiim.png" alt="Inter Miami">
+      <span class="tooltip-text"> 2025 - With Inter Miami in MLS</span>
+    </div>
+    <div class="gallery-img mobile-tooltip" data-club="psg">
+      <img src="messi10.png" alt="PSG">
+      <span class="tooltip-text">2022 - With PSG in Ligue 1</span>
+    </div>
+    <div class="gallery-img mobile-tooltip" data-club="barcelona">
+      <img src="messibc1.png" alt="Barcelona">
+      <span class="tooltip-text">2017 - Scoring Last Minute Goal Vs Real Madrid</span>
+    </div>
+    <div class="gallery-img mobile-tooltip" data-club="newells">
+      <img src="messinw.png" alt="Newell's">
+      <span class="tooltip-text">1995 - 2000 Youth years at Newell's Old Boys</span>
+    </div>
+    </div>
+    </section>
+
+    <footer>© 2026 Rezky Irawan</footer>
+</div> 
+
+<div id="lightbox"><img src="" alt="Messi Lightbox"></div>
+
+<script>
+// ==================================================== 
+// SCRIPT BINTANG EMAS (OPTIMAL UNTUK LANGIT MALAM)
+// ==================================================== 
+function createStars() {
+    const container = document.getElementById('star-container');
+    const starCount = 70; 
+
+    for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        
+        // Ukuran bervariasi agar terlihat natural
+        const size = Math.random() * 5 + 3;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        
+        star.style.left = Math.random() * 100 + 'vw';
+        
+        // Kecepatan yang elegan
+        star.style.animationDuration = (Math.random() * 4 + 3) + 's';
+        star.style.animationDelay = (Math.random() * 10) + 's';
+        
+        container.appendChild(star);
+    }
+}
+createStars();
+
+// Script asli lainnya tetap dipertahankan
+const sections=document.querySelectorAll("section");
+const navLinks=document.querySelectorAll("nav a");
+window.addEventListener("scroll",()=>{
+let current="";
+sections.forEach(section=>{
+const sectionTop=section.offsetTop-60;
+if(pageYOffset>=sectionTop) current=section.getAttribute("id");
+});
+navLinks.forEach(link=>{link.classList.remove("active");if(link.getAttribute("href")==="#"+current) link.classList.add("active");});
+});
+
+const faders=document.querySelectorAll('.fade-in');
+const appearOptions={threshold:0.2};
+const appearOnScroll=new IntersectionObserver((entries,observer)=>{
+entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);}});
+},appearOptions);
+faders.forEach(fader=>appearOnScroll.observe(fader));
+
+const galleryImgs=document.querySelectorAll('.gallery-img');
+const lightbox=document.getElementById('lightbox');
+const lbImg=lightbox.querySelector('img');
+galleryImgs.forEach(imgContainer=>{
+  imgContainer.addEventListener('click',(e)=>{
+    if(window.innerWidth <= 768){
+      document.querySelectorAll('.gallery-img.active').forEach(el=>el.classList.remove('active'));
+      imgContainer.classList.toggle('active');
+    } else {
+      lbImg.src=imgContainer.querySelector('img').src;
+      lightbox.style.display='flex';
+    }
+  });
+});
+lightbox.addEventListener('click',()=>{lightbox.style.display='none';});
+
+const counters=document.querySelectorAll('.counter');
+counters.forEach(counter=>{
+const updateCount=()=>{
+const target=+counter.getAttribute('data-target');
+const count=+counter.innerText;
+const increment=Math.ceil(target/200);
+if(count<target){counter.innerText=count+increment;setTimeout(updateCount,20);}else{counter.innerText=target;}
+};
+const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){updateCount();observer.unobserve(counter);}})},{threshold:0.5});
+observer.observe(counter);
+});
+
+const filterButtons=document.querySelectorAll('.gallery-filter button');
+filterButtons.forEach(btn=>{btn.addEventListener('click',()=>{
+const club=btn.getAttribute('data-club');
+galleryImgs.forEach(img=>{img.style.display=(club==='all'||img.getAttribute('data-club')===club)?'block':'none';});
+});});
+
+const trophyLists=document.querySelectorAll('.trophies,.trophies-club');
+const trophyObserver=new IntersectionObserver((entries,observer)=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){
+const items=entry.target.querySelectorAll('li');
+items.forEach((item,index)=>{setTimeout(()=>{item.classList.add('visible');},index*150);});
+observer.unobserve(entry.target);
+}
+});
+},{threshold:0.3});
+trophyLists.forEach(sec=>trophyObserver.observe(sec));
+</script>
+
+</body>
+</html>
